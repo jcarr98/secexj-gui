@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.AnchorPane?>
+<AnchorPane xmlns:fx="http://javafx.com/fxml/1" fx:controller="gui.RegistrationController" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity"
+            prefHeight="174.0" prefWidth="365.0" xmlns="http://javafx.com/javafx/16">
+    <children>
+        <TextField fx:id="dname" layoutX="148.0" layoutY="40.0">
+            <tooltip>
+                <Tooltip text="The name other users will see" textAlignment="CENTER"/>
+            </tooltip>
+        </TextField>
+        <TextField fx:id="cid" layoutX="148.0" layoutY="76.0">
+            <tooltip>
+                <Tooltip text="The ID you use to connect to other users" textAlignment="CENTER"/>
+            </tooltip>
+        </TextField>
+        <Label layoutX="40.0" layoutY="45.0" text="Display Name"/>
+        <Label layoutX="39.0" layoutY="81.0" text="Connection ID"/>
+        <Button fx:id="submitButton" layoutX="155.0" layoutY="118.0" mnemonicParsing="false" onAction="#submit"
+                text="Submit"/>
+    </children>
+</AnchorPane>
