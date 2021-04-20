@@ -10,15 +10,14 @@
 <AnchorPane fx:id="ap" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1" fx:controller="gui.SecexController">
    <children>
       <Separator layoutX="411.0" orientation="VERTICAL" prefHeight="400.0" prefWidth="1.0" />
-      <TextArea fx:id="messageBox" layoutX="14.0" layoutY="315.0" prefHeight="77.0" prefWidth="305.0" />
+      <TextArea fx:id="messageBox" layoutX="14.0" layoutY="315.0" onKeyPressed="#quickSend" prefHeight="77.0" prefWidth="305.0" />
       <TextArea fx:id="chatWindow" editable="false" layoutX="14.0" layoutY="14.0" prefHeight="291.0" prefWidth="390.0" />
-      <Button fx:id="sendButton" layoutX="330.0" layoutY="336.0" mnemonicParsing="false" onAction="#sendMessage" prefHeight="36.0" prefWidth="74.0" text="Send" />
+      <Button fx:id="sendButton" defaultButton="true" layoutX="330.0" layoutY="336.0" mnemonicParsing="false" onAction="#buttonSend" prefHeight="36.0" prefWidth="74.0" text="Send" />
       <Label layoutX="417.0" layoutY="32.0" text="Connected to:" />
       <Label fx:id="peerNameLabel" layoutX="479.0" layoutY="57.0" text="None" />
       <ListView fx:id="downloadBox" layoutX="424.0" layoutY="136.0" prefHeight="200.0" prefWidth="170.0" />
       <Button fx:id="uploadButton" layoutX="427.0" layoutY="347.0" mnemonicParsing="false" text="Upload" />
       <Button fx:id="downloadButton" layoutX="509.0" layoutY="347.0" mnemonicParsing="false" text="Download" />
-      <Button fx:id="testButton" layoutX="462.0" layoutY="74.0" mnemonicParsing="false" onAction="#checkName" text="Check dname" />
       <Label layoutX="427.0" layoutY="119.0" text="Files:" />
    </children>
 </AnchorPane>
