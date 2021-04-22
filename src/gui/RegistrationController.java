@@ -1,7 +1,6 @@
 package gui;
 
-import communication.Mediator;
-import communication.Register;
+import setup.Register;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -13,7 +12,7 @@ import javafx.scene.paint.Color;
 import javafx.scene.text.Text;
 import javafx.scene.text.TextFlow;
 import javafx.stage.Stage;
-import com.User;
+import main.User;
 
 import java.io.IOException;
 import java.net.Socket;
@@ -22,7 +21,6 @@ public class RegistrationController {
     @FXML private TextFlow infoBox;
     @FXML private TextField dname;
     @FXML private TextField cid;
-    private User user;
 
     public RegistrationController() {}
 
@@ -62,12 +60,7 @@ public class RegistrationController {
         info("Connecting to server...");
 
         // Connect to server
-        Socket socket = null;
-        try {
-            socket = new Socket("127.0.0.1", 8008);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        Socket socket = connect();
 
         if(socket == null) {
             info("Error connecting to server", true);
@@ -77,23 +70,29 @@ public class RegistrationController {
         }
         info("Registering...");
 
-        // Create registration object and run
-        Register reg = new Register(socket, name, intId);
-        reg.run();
-        boolean registered = reg.getStatus();
+        // Create user and register them with server
+        User user = new User(socket);
+        user.setName(name);
+        user.setCid(intId);
+        Register reg = new Register(user);
+        boolean registered = reg.run();
         if(registered) {
             info("Registration successful! Loading app...");
+            // Get updated user
+            user = reg.getUser();
         } else {
             info("Registration unsuccessful, check logs", true);
             dname.setDisable(false);
             cid.setDisable(false);
+            return;
         }
 
-        // Create user
-        user = reg.getUser();
-
         // Switch scenes
-        //sendData(actionEvent, name, cid, reg.waiting());
+        // Get node
+        Node node = (Node) actionEvent.getSource();
+        // Get stage
+        Stage stage = (Stage) node.getScene().getWindow();
+        sendData(stage, user);
     }
 
     private void info(String message) {
@@ -128,25 +127,14 @@ public class RegistrationController {
         return socket;
     }
 
-    private void sendData(ActionEvent actionEvent, String name, int id, boolean waiting) {
-        // Create user
-        User user = new User(name, id);
-
-        // Get node
-        Node node = (Node) actionEvent.getSource();
-
+    private void sendData(Stage stage, User user) {
         // Close stage
-        Stage stage = (Stage) node.getScene().getWindow();
         stage.close();
 
         try {
             // Load scene
-            Parent root;
-            if(waiting) {
-                root = FXMLLoader.load(getClass().getResource("waiting.fxml"));
-            } else {
-                root = FXMLLoader.load(getClass().getResource("secex.fxml"));
-            }
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("waiting.fxml"));
+            Parent root = (Parent)loader.load();
 
             if(root == null) {
                 System.out.println("Error loading next scene");
@@ -156,6 +144,9 @@ public class RegistrationController {
 
             // Pass information
             stage.setUserData(user);
+            WaitingController controller = (WaitingController) loader.getController();
+            controller.loadUser(stage);
+            controller.runWait();
 
             // Create new scene
             Scene scene = new Scene(root);
@@ -167,23 +158,5 @@ public class RegistrationController {
         catch(IOException e) {
             e.printStackTrace();
         }
-    }
-
-    private void switchScene(User user) {
-        // Get the stage
-        Stage st = (Stage) dname.getScene().getWindow();
-
-        // Load the scene
-        Parent scene;
-        try {
-            scene = FXMLLoader.load(getClass().getResource("secex.fxml"));
-        } catch (IOException e) {
-            e.printStackTrace();
-            return;
-        }
-
-        // Change scene to application
-        st.setTitle("Secure Exchange");
-        st.setScene(new Scene(scene));
     }
 }
